@@ -1,4 +1,4 @@
-﻿
+﻿using System.Net.Mail;
 namespace TicketBookingCore
 {
     public class TicketBookingRequestProcessor
@@ -17,9 +17,23 @@ namespace TicketBookingCore
                 throw new ArgumentNullException(nameof(request));
             }
 
+            ValidateEmail(request.Email);
+
             _ticketBookingRepository.Save(Create<TicketBooking>(request));
 
             return Create<TicketBookingResponse>(request);
+        }
+
+        private void ValidateEmail(string email)
+        {
+            try
+            {
+                var mailAddress = new MailAddress(email);
+            }
+            catch
+            {
+                throw new ArgumentException("Invalid e-post adress");
+            }
         }
         /// <summary>
         /// This method creates a new instance of the specified type 
